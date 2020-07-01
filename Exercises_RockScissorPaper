@@ -1,0 +1,26 @@
+a = {"rock": 3, "scissor": 2, "paper": 1}
+answer = True
+
+
+def get_bool(prompt):
+    while True:
+        try:
+            return {"yes": True, "no": False}[input(prompt).lower()]
+        except KeyError:
+            print("Wrong! Type 'Yes' or 'No'!")
+
+
+while answer is True:
+    choise = input("Player 1! Type 'Rock', 'Scissor' or 'Paper'   ").lower()
+    choise2 = input("Player 2! Type 'Rock', 'Scissor' or 'Paper'   ").lower()
+    while choise not in a or choise2 not in a:
+        print("Wrong! Try again! \n")
+        choise = input("Player 1! Type 'Rock', 'Scissor' or 'Paper'   ").lower()
+        choise2 = input("Player 2! Type 'Rock', 'Scissor' or 'Paper'   ").lower()
+    if a[choise] - a[choise2] in [1, -2]:
+        print("Player 1 WINS!!!!")
+    elif a[choise] - a[choise2] == 0:
+        print("It's a DRAW!!")
+    else:
+        print("Player 2 WINS!!!")
+    answer = get_bool("Play again? Yes/No: ")
