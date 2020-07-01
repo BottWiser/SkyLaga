@@ -1,0 +1,23 @@
+from random import randint
+
+
+guess = 0
+
+
+print("Now we gonna play a guess game. There is a number from 1 to 9. Try to guess it! (for exit just type 'exit')")
+while guess != "exit":
+    a = randint(1, 9)
+    tryes = 0
+    bul = False
+    while bul is False:
+        tryes += 1
+        guess = input("Your guess?  ")
+        if guess == "exit":
+            break
+        elif int(guess) < a:
+            print('Too low!')
+        elif int(guess) > a:
+            print('Too high!')
+        elif int(guess) == a:
+            print("Exactly right! You did it from the " + str(tryes) + " attempt. Let's play again!")
+            bul = True
