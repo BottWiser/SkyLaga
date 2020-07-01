@@ -19,5 +19,5 @@ while guess != "exit":
         elif int(guess) > a:
             print('Too high!')
         elif int(guess) == a:
-            print("Exactly right! You did it from the " + str(tryes) + " attempt. Let's play again!")
+            print("Exactly right! You did it from the", tryes, "attempt. Let's play again!")
             bul = True
