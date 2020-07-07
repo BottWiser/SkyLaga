@@ -1,0 +1,47 @@
+function combinations(str) {
+    let fn = function(active, rest, a) {
+        if (!active && !rest)
+            return;
+        if (!rest) {
+            a.push(active.split("").join("."));
+            let b = active.split("").reverse().join(".");
+            if (!a.includes(b)) {
+                a.push(b);
+            }
+        } else {
+            fn(active + rest[0], rest.slice(1), a);
+            fn(active, rest.slice(1), a);
+        }
+        return a;
+    }
+    return fn("", str, []);
+}
+
+function freeTiton(arr1, arr2, someFn){
+    let result = [];
+    let temp = arr1.pop();
+    for (let i = 0; i < arr1.length; i++){
+        arr1[i] = arr1[i] + ".";
+    }
+    arr1 = arr1.join("");
+    arr2 = combinations(arr2.join(""));
+    for (let i = 0; i < arr2.length; i++){
+        result.push(arr1 + arr2[i] + "." + temp);
+    }
+    result.push(arr1 + temp);
+    for (let i = 0; i < result.length; i++){
+        if (someFn(result[i]) == true){
+            return result[i];
+        }
+    }
+    return "Required element not found";
+}
+
+let arrtest1 = ["a", "b", "c"], arrtest2 = ["d", "e", "f"];
+
+function testFn(x) {
+    if (x.length == 9) {
+        return true
+    }
+}
+console.log(freeTiton(arrtest1, arrtest2, testFn))
