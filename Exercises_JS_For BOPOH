@@ -18,21 +18,17 @@ function combinations(str) {
 }
 
 function freeTiton(arr1, arr2, someFn){
-    let result = [];
     let temp = arr1.pop();
-    for (let i = 0; i < arr1.length; i++){
-        arr1[i] = arr1[i] + ".";
-    }
-    arr1 = arr1.join("");
+    arr1 = [arr1.join(".")];
     arr2 = combinations(arr2.join(""));
     for (let i = 0; i < arr2.length; i++){
-        result.push(arr1 + arr2[i] + "." + temp);
-    }
-    result.push(arr1 + temp);
-    for (let i = 0; i < result.length; i++){
-        if (someFn(result[i]) == true){
-            return result[i];
+        let result = arr1 + "." + arr2[i] + "." + temp;
+        if (someFn(result) == true){
+            return result;
         }
+    }
+    if (someFn(arr1 + "." + temp) == true){
+        return arr1 + "." + temp;
     }
     return "Required element not found";
 }
@@ -40,8 +36,8 @@ function freeTiton(arr1, arr2, someFn){
 let arrtest1 = ["a", "b", "c"], arrtest2 = ["d", "e", "f"];
 
 function testFn(x) {
-    if (x.length == 9) {
+    if (x.length == 5) {
         return true
     }
 }
-console.log(freeTiton(arrtest1, arrtest2, testFn))
+console.log(freeTiton(arrtest1, arrtest2, testFn));
