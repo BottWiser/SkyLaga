@@ -1,0 +1,39 @@
+function freeTiton (arr1, arr2, someFn) {
+    let temp = arr1.pop()
+    arr1 = [arr1.join(".")]
+
+    for (let i = Math.pow(2, arr2.length) - 1; i >= 0; i --) {
+        let combination = []
+
+        for (let j = 0; j < arr2.length; j++) {
+            if ((i & Math.pow(2, j))) {
+                combination.push(arr2[j] + ".")
+            }
+        }
+
+        let result = arr1 + "." + combination.join("") + temp
+
+        if (someFn(result) == true){
+            return result
+        }
+
+        if (combination.length > 1){
+            result = arr1 + "." + combination.reverse().join("") + temp
+            if (someFn(result) == true){
+                return result
+            }
+        }
+
+    }
+    return "Required element not found"
+}
+
+let arrtest1 = ["a", "b", "c"], arrtest2 = ["dx", "e", "f"]
+
+function testFn(x) {
+    if (x.length == 7) {
+        return true
+    }
+}
+
+console.log(freeTiton(arrtest1, arrtest2, testFn));
