@@ -56,7 +56,7 @@ def make_move(a, array, b):
 
 
 # Function for game itself. Ask users for input coordinates of their moves, until someone wins or no moves left.
-def play(arr, i):
+def play(arr, i=0):
     if i == 0:  # drawing empty game board for a first time.
         print_board(arr)
     first = input("1st player. Input row and column ").strip().split(" ")  # First player's move.
@@ -86,4 +86,4 @@ def play(arr, i):
 
 
 game1 = np.zeros((3, 3), dtype=int)
-play(game1, 0)
+play(game1)
