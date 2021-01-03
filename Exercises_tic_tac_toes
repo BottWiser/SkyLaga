@@ -1,0 +1,89 @@
+# Tic tac toe console game with pseudo-drawing game board.
+import numpy as np
+
+
+# Function that print a board. It takes element from given array and use it as index for list piece (0, 1, 2).
+# According to that fills board's cells with space, "o" or "x"
+def print_board(game_arr):
+    piece = ["|   ", "| x ", "| o "]
+    top = "--- "
+    left = "|"
+    for i in range(3):
+        print(" ", top * 3, "\n", piece[game_arr[i][0]] + piece[game_arr[i][1]] + piece[game_arr[i][2]] + left)
+    print(" ", top*3)
+
+
+# Function checks given 1d array for equality of all elements, except zeroes.
+def equal(a):
+    temp = a[0]
+    for elem in range(3):
+        if a[elem] != temp or a[elem] == 0:
+            return False
+    return True
+
+
+# Function checks if there is a winner in a game by checking axis, diagonals and columns. Takes array as argument.
+def declare_winner(game):
+    if equal(np.diagonal(game)):  # use "equal" function for matrix's main diagonal.
+        return print("Player", str(game.diagonal()[0]), "win!")
+    elif equal(np.fliplr(game).diagonal()):  # same for reversed matrix's main diagonal.
+        return print("Player", str(np.fliplr(game).diagonal()[0]), "win!")
+    else:
+        for i in range(3):
+            if equal(game[i]):  # use "equal" function for matrix's axis
+                return print("Player", str(game[i][0]), "win!")
+            elif game[0][i] == game[1][i] == game[2][i] != 0:  # Checking columns by comparing index i in every axis.
+                return print("Player", str(game[0][i]), "win!")
+    return False  # if nobody wins return False
+
+
+# Function that check for correctness of user's input and rewrite element in array according to user's input, returning
+# changed array. If input doesn't meet requirements - return False
+# Takes as arguments: a - user's input, array - array with a data of all moves, b - player's number to rewrite element
+def make_move(a, array, b):
+    if len(a) == 2:  # Check if just two numbers in user's input
+        if int(a[0]) and int(a[1]) in range(1, 4):  # Check if inputted numbers are from 1 to 3
+            if array[int(a[0])-1][int(a[1])-1] != 0:  # Check if inputted indexes weren't used
+                print("Cell is already used")
+                return False
+            array[int(a[0])-1][int(a[1])-1] = b  # Rewrite element
+            return array  # Returns changed array
+        else:
+            print("Rows and columns might be from 1 to 3")
+            return False
+    print("Input just two numbers, row and column")
+    return False
+
+
+# Function for game itself. Ask users for input coordinates of their moves, until someone wins or no moves left.
+def play(arr, i):
+    if i == 0:  # drawing empty game board for a first time.
+        print_board(arr)
+    first = input("1st player. Input row and column ").strip().split(" ")  # First player's move.
+    a = make_move(first, arr, 1)  # Checking input with "make_move" function.
+    while isinstance(a, bool):  # If input doesn't pass, ask to input again.
+        first = input("1st player. Input row and column ").strip().split(" ")
+        a = make_move(first, arr, 1)
+    arr = a
+    print_board(arr)  # Prints board, obviously.
+    if not isinstance(declare_winner(arr), bool):  # Checking for winner.
+        return
+    i += 1  # Moves counter
+    if i == 5:  # Breaks if no moves left.
+        print("No winners in this game")
+        return
+    second = input("2nd player. Input row and column ").strip().split(" ")   # Second player's move.
+    a = make_move(second, arr, 2)  # Checking input with "make_move" function.
+    while isinstance(a, bool):  # If input doesn't pass, ask to input again.
+        second = input("2nd player. Input row and column ").strip().split(" ")
+        a = make_move(second, arr, 2)
+    arr = a
+    print_board(arr)  # Print board
+    if not isinstance(declare_winner(arr), bool):  # Checking for winner.
+        return
+    else:  # if nobody win, call for function recursively
+        return play(arr, i)
+
+
+game1 = np.zeros((3, 3), dtype=int)
+play(game1, 0)
