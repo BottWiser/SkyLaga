@@ -13,17 +13,14 @@ def print_board(game_arr):
     print(" ", top*3)
 
 
-# Function checks given 1d array for equality of all elements, except zeroes.
-def equal(a):
-    temp = a[0]
-    for elem in range(3):
-        if a[elem] != temp or a[elem] == 0:
-            return False
-    return True
-
-
 # Function checks if there is a winner in a game by checking axis, diagonals and columns. Takes array as argument.
 def declare_winner(game):
+    def equal(a):  # Function checks given 1d array for equality of all elements, except zeroes.
+        temp = a[0]
+        for elem in range(3):
+            if a[elem] != temp or a[elem] == 0:
+                return False
+        return True
     if equal(np.diagonal(game)):  # use "equal" function for matrix's main diagonal.
         return print("Player", str(game.diagonal()[0]), "win!")
     elif equal(np.fliplr(game).diagonal()):  # same for reversed matrix's main diagonal.
@@ -87,3 +84,4 @@ def play(arr, i=0):
 
 game1 = np.zeros((3, 3), dtype=int)
 play(game1)
+input("Press Enter to close ")
