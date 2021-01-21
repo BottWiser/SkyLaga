@@ -1,0 +1,42 @@
+def combinations(arr, arr2, some_fn):
+    def merge_arrays(arr_merge, arr2_merge):
+        temp = str(arr_merge.pop)
+        string = str("".join(arr_merge) + "".join(arr2_merge) + temp)
+        return string
+    for item in arr2:
+        print([item])
+        for next_item in arr2:
+            if item != next_item:
+                current1 = [item, next_item]
+                print(current1)
+                if some_fn(merge_arrays(arr, current1)):
+                    return current1
+                for item2 in arr2:
+                    if item2 not in current1:
+                        current2 = current1 + [item2]
+                        print(current2)
+                        x = merge_arrays(arr, current2)
+                        if some_fn(x):
+                            return current2
+                        for next_item2 in arr2:
+                            if next_item2 not in current2:
+                                current3 = current2 + [next_item2]
+                                print(current3)
+                                x = merge_arrays(arr, current3)
+                                if some_fn(x):
+                                    return current3
+    return
+
+
+array = ["a", "b", "c"]
+array2 = ["d", "e", "f"]
+
+
+def test_fun(arg=""):
+    if len(arg) == 6:
+        return True
+    else:
+        return False
+
+
+combinations(array, array2, test_fun())
