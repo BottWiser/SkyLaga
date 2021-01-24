@@ -1,42 +1,51 @@
-def combinations(arr, arr2, some_fn):
-    def merge_arrays(arr_merge, arr2_merge):
-        temp = str(arr_merge.pop)
-        string = str("".join(arr_merge) + "".join(arr2_merge) + temp)
-        return string
-    for item in arr2:
-        print([item])
-        for next_item in arr2:
-            if item != next_item:
-                current1 = [item, next_item]
-                print(current1)
-                if some_fn(merge_arrays(arr, current1)):
-                    return current1
-                for item2 in arr2:
-                    if item2 not in current1:
-                        current2 = current1 + [item2]
-                        print(current2)
-                        x = merge_arrays(arr, current2)
-                        if some_fn(x):
-                            return current2
-                        for next_item2 in arr2:
-                            if next_item2 not in current2:
-                                current3 = current2 + [next_item2]
-                                print(current3)
-                                x = merge_arrays(arr, current3)
-                                if some_fn(x):
-                                    return current3
-    return
+# Функция принимает как аргументы два массива и другую функцию
+def bopoh(arr, arr2, some_fn):
+    # Рекурсивно перебирает все возможные комбинации. Как аргументы принимает массив и счетчик, изначально равный длине
+    # массива
+    def combinations(a, lenght):
+        # Если счетчик равен 1, перебор закончен
+        if lenght == 1:
+            # Скармливает результат от 1 символа до n
+            for x in range(1, len(a) + 1):
+                temp = str(arr[len(arr) - 1])
+                string = str(".".join(arr[:len(arr) - 1]) + "." + ".".join(a[:x]) + "." + temp)
+                print(string)
+                # если функция возвращает True, рекурсия прерывается и возвращается результат
+                if some_fn(string):
+                    print("Here!")
+                    return string
+            # возвращаение на предыдущий слой рекурсии
+            return
+        # рекурсивно вызываем функцию пока есть что переставлять, и уменьшаем счетчик на 1
+        for i in range(lenght):
+            # Записываем то, что нам возвращает функция.
+            k = combinations(a, lenght - 1)
+            if type(k) != str:
+                # Если функция возвращает None, счетчик четный - меняем местами первый и lenght-1 элемент
+                if lenght % 2 == 0:
+                    a[0], a[lenght - 1] = a[lenght - 1], a[0]
+                # Если счетчик нечетный - меняем местами элементы i и lenght -1
+                else:
+                    a[i], a[lenght - 1] = a[lenght - 1], a[i]
+            else:
+                # Если функция вернула строку - возвращаем результат
+                return k
+    # записываем и возвращаем результат функции combinations. Если нужной комбинации не найдено - возвращаем "Not found"
+    result = combinations(arr2, len(arr2))
+    if result:
+        return result
+    return "Not found"
 
 
 array = ["a", "b", "c"]
-array2 = ["d", "e", "f"]
+array2 = ["d", "e", "f", "g"]
 
 
-def test_fun(arg=""):
-    if len(arg) == 6:
+def testFn(x=""):
+    if len(x) == 13:
         return True
     else:
         return False
 
 
-combinations(array, array2, test_fun())
+print(bopoh(array, array2, testFn))
