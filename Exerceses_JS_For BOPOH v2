@@ -1,39 +1,122 @@
-function freeTiton (arr1, arr2, someFn) {
-    let temp = arr1.pop()
-    arr1 = [arr1.join(".")]
+// Функция принимает как аргументы два массива и другую функцию.
+function bopoh(arr1, arr2, some_fn) {
 
-    for (let i = Math.pow(2, arr2.length) - 1; i >= 0; i --) {
-        let combination = []
-
-        for (let j = 0; j < arr2.length; j++) {
-            if ((i & Math.pow(2, j))) {
-                combination.push(arr2[j] + ".")
-            }
+    // Функция для объединения двух массивов. Второй массив ставит перед последним элементом первого, и возвращает
+    // разделенные точкой элементы полученного объединенного массива в виде строки
+    function merge_arrays(arr1, arr2_comb){
+        let last = arr1[arr1.length-1];
+        let result_string;
+        if (arr2_comb.length >= 2){
+            result_string = arr1.slice(0, -1).join(".") + "." + arr2_comb.join(".") + "." + last;
+        }else {
+            result_string = arr1.slice(0, -1).join(".") + "." + arr2_comb + "." + last;
         }
-
-        let result = arr1 + "." + combination.join("") + temp
-
-        if (someFn(result) == true){
-            return result
+        return result_string
+    }
+    
+    // Функция для рекурсивного поиска всех возможных сочитаний элементов массива. Функция принимает как аргументы два исходных массива,
+    // другую функцию, длину массива и длину искомого сочетания. 
+    function combinations(arr1, arr2, some_fn, n, k, res=[], count=0, i=0) {
+        // если счетчик равен длине искомого сочетания, полученное сочетание передается в функцию permutation, для поиска 
+        // всех перестановок
+        if (count >= k){
+            res_len = res.length;
+            console.log(res);
+            // возвращает результат функции permutation на предыдущий слой рекурсии.
+            return permutation(arr1, some_fn, res, res_len);
         }
+        // если в сочетание добавлять нечего, возвращаемся на предыдущий слой рекурсии.
+        if (i >= n){
+            return;
+        }
+        // записываем элемент сочетания
+        res[count] = arr2[i];
+        // Рекурсивно вызываем функцию, увеличивая счетчик длины сочетания и счетчик длины массива. 
+        // Записываем то, что нам вернула функция. Если не None - возвращаем результат.
+        check = combinations(arr1, arr2, some_fn, n, k, res, count+1, i+1);
+        if (check){
+            return check
+        }
+        // Рекурсивно вызываем функцию, увеличивая счетчик длины массива
+        combinations(arr1, arr2, some_fn, n, k, res, count, i+1);
+    }
 
-        if (combination.length > 1){
-            result = arr1 + "." + combination.reverse().join("") + temp
-            if (someFn(result) == true){
+    // Функция для рекурсивного поиска всех переставновок переданного сочетания. Как аргументы принимает исходный массив, функцию,
+    // текущее сочетание и длину сочетания
+    function permutation(arr1, some_fn, a, len){
+        // Если счетчик равен 1, перебор закончен
+        if (len == 1){
+            // Передает результат массиву merge_arrays и скармливает результат функции.
+            let result = merge_arrays(arr1, a);
+            console.log(result);
+            // Если функция возвращает True, рекурсия прерывается и возвращается результат
+            if (some_fn(result)){
+                console.log ("here")
                 return result
             }
+            // возвращаение на предыдущий слой рекурсии
+            return
         }
-
+        //рекурсивно вызываем функцию пока есть что переставлять, и уменьшаем счетчик на 1
+        for(let i = 0; i < len; i++){
+            // Записываем то, что нам возвращает функция. Если вернулось не None - прерываем рекурсию и возвращаем результат.
+            let check = permutation(arr1, some_fn, a, len-1);
+            if (check){
+                return check
+            // Если вернулось None, счетчик четный - меняем местами первый и lenght-1 элемент 
+            }else{
+                if (len % 2 == 0){
+                    [a[0], a[len - 1]] = [a[len - 1], a[0]];
+                }
+                // Если вернулось None, счетчик нечетный - меняем местами элементы i и lenght -1 
+                else{
+                    [a[i], a[len - 1]] = [a[len - 1], a[i]];
+                }
+            }
+        }
     }
-    return "Required element not found"
+
+    // Двумя циклами проходимся по массиву, и скармливаем функции результаты для сочетаний из 1 и 2 элементов. 
+    let n = arr2.length;
+    for (let i = 0; i < n; i++){
+        let k1 = merge_arrays(arr1, [arr2[i]]);
+        console.log(k1)
+        if (some_fn(k1)){
+            return k1;
+        }
+        for (let ii = 0; ii <n; ii++){
+            if(ii != i){
+                let temp = [arr2[i], arr2[ii]];
+                let k2 = merge_arrays(arr1, temp);
+                console.log(k2)
+                if (some_fn(k2)){
+                    return k2;    
+                }
+            }
+        }
+    }
+    // для сочетания из трех и более элементов вызываем функцию combinations.
+    for (let k = 3; k <= n; k++){
+        check = combinations(arr1, arr2, some_fn, n, k);
+        // если combinations вернуло не None, возвращаем результат
+        if (check){
+            return check
+        }
+    }
+    // Если подходящая комбинация не найдена, пишем соответствующее сообщение
+    return "There is no such combinations"
 }
 
-let arrtest1 = ["a", "b", "c"], arrtest2 = ["dx", "e", "f"]
 
 function testFn(x) {
-    if (x.length == 7) {
+    if (x.length == 13) {
         return true
+    }else{
+        return false
     }
 }
 
-console.log(freeTiton(arrtest1, arrtest2, testFn));
+
+let a = ["a", "b", "c"], b = ["d", "e", "f", "g"]
+
+console.log("Result: ", bopoh(a, b, testFn))
